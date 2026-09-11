@@ -55,7 +55,6 @@ class _MainScreenState extends State<MainScreen> {
   DateTime _selectedDate = DateTime.now();
   int _currentViewIndex = 0;
 
-  // Registro de Días Festivos (Ejemplo con festivos de Colombia/Latinoamérica)
   final Map<String, String> _holidays = {
     // 2026
     "2026-01-01": "Año Nuevo",
@@ -259,7 +258,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+            color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -348,7 +347,7 @@ class _MainScreenState extends State<MainScreen> {
               color: isSelected
                   ? Theme.of(context).colorScheme.primary
                   : isHoliday
-                      ? Colors.red.withValues(alpha: 0.15)
+                      ? Colors.red.withOpacity(0.15)
                       : isToday
                           ? Theme.of(context).colorScheme.primaryContainer
                           : Colors.transparent,
@@ -455,7 +454,7 @@ class _MainScreenState extends State<MainScreen> {
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: event.color.withValues(alpha: 0.2),
+                          backgroundColor: event.color.withOpacity(0.2),
                           child: Icon(
                             event.isHoliday ? Icons.star : Icons.bookmark,
                             color: event.color,
@@ -532,7 +531,7 @@ class _MainScreenState extends State<MainScreen> {
         final cat = categories[index];
         final color = cat['color'] as Color;
         return Card(
-          color: color.withValues(alpha: 0.15),
+          color: color.withOpacity(0.15),
           child: InkWell(
             onTap: () {},
             borderRadius: BorderRadius.circular(12),
