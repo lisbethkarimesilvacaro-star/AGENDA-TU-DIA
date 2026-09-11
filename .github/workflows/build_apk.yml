@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up Java
       uses: actions/setup-java@v3
@@ -23,26 +24,6 @@ jobs:
       with:
         flutter-version: '3.19.x'
         channel: 'stable'
-
-    - name: Create minimal pubspec.yaml
-      run: |
-        cat <<EOF > pubspec.yaml
-        name: agenda_tu_dia
-        description: "App de agenda diaria"
-        publish_to: 'none'
-        version: 1.0.0+1
-
-        environment:
-          sdk: '>=3.0.0 <4.0.0'
-
-        dependencies:
-          flutter:
-            sdk: flutter
-          cupertino_icons: ^1.0.6
-
-        flutter:
-          uses-material-design: true
-        EOF
 
     - name: Install dependencies
       run: flutter pub get
