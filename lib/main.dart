@@ -15,9 +15,11 @@ class AgendaApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4F46E5),
-          primary: const Color(0xFF4F46E5),
-          secondary: const Color(0xFF06B6D4),
+          // Cambiamos el color base a un tono lila/rosa tierno
+          seedColor: const Color(0xFFD946EF), // Fucsia/Rosa suave
+          primary: const Color(0xFFC084FC),    // Lila pastel principal
+          secondary: const Color(0xFFF472B6),  // Rosa pastel secundario
+          primaryContainer: const Color(0xFFF3E8FF), // Lila muy clarito para contenedores
         ),
       ),
       home: const MainScreen(),
@@ -110,11 +112,11 @@ class _MainScreenState extends State<MainScreen> {
       list.insert(
         0,
         Event(
-          title: "🎉 ${_holidays[key]}",
+          title: "🌸 ${_holidays[key]}",
           description: "Día Festivo Oficial",
           time: "Todo el día",
-          category: "Festivo",
-          color: Colors.redAccent,
+          category: "Festivos",
+          color: const Color(0xFFF43F5E),
           isHoliday: true,
         ),
       );
@@ -146,7 +148,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'AGENDA TU DÍA',
+          'AGENDA TU DÍA ✨',
           style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.1),
         ),
         centerTitle: true,
@@ -170,25 +172,25 @@ class _MainScreenState extends State<MainScreen> {
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF4F46E5), Color(0xFF06B6D4)],
+                  colors: [Color(0xFFC084FC), Color(0xFFF472B6)], // Degradado lila y rosa tierno
                 ),
               ),
               accountName: const Text(
                 'Agenda Tu Día',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              accountEmail: const Text('Tu organizador personal'),
+              accountEmail: const Text('Tu organizador personal 💖'),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Icon(
-                  Icons.calendar_month,
-                  size: 40,
-                  color: Theme.of(context).colorScheme.primary,
+                  Icons.favorite,
+                  size: 36,
+                  color: const Color(0xFFD946EF),
                 ),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.calendar_month, color: Color(0xFF4F46E5)),
+              leading: const Icon(Icons.calendar_month, color: Color(0xFFC084FC)),
               title: const Text('Calendario Completo'),
               selected: _currentViewIndex == 0,
               onTap: () {
@@ -197,7 +199,7 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.format_list_bulleted, color: Color(0xFF4F46E5)),
+              leading: const Icon(Icons.format_list_bulleted, color: Color(0xFFC084FC)),
               title: const Text('Todos los Eventos'),
               selected: _currentViewIndex == 1,
               onTap: () {
@@ -206,7 +208,7 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.category, color: Color(0xFF4F46E5)),
+              leading: const Icon(Icons.category, color: Color(0xFFC084FC)),
               title: const Text('Categorías'),
               selected: _currentViewIndex == 2,
               onTap: () {
@@ -216,7 +218,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.info_outline),
+              leading: const Icon(Icons.info_outline, color: Color(0xFFF472B6)),
               title: const Text('Acerca de'),
               onTap: () {
                 Navigator.pop(context);
@@ -224,9 +226,9 @@ class _MainScreenState extends State<MainScreen> {
                   context: context,
                   applicationName: 'Agenda Tu Día',
                   applicationVersion: '1.0.0',
-                  applicationIcon: const Icon(Icons.calendar_month, size: 40),
+                  applicationIcon: const Icon(Icons.favorite, size: 40, color: Color(0xFFD946EF)),
                   children: [
-                    const Text('Aplicación diseñada para organizar tus tareas y eventos diarios.'),
+                    const Text('Aplicación tierna diseñada para organizar tus tareas y eventos con amor. 🌷'),
                   ],
                 );
               },
@@ -243,6 +245,8 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () => _showAddEventDialog(context),
         icon: const Icon(Icons.add),
         label: const Text('Nuevo Evento'),
+        backgroundColor: const Color(0xFFE879F9), // Botón flotante en rosa pastel encendido
+        foregroundColor: Colors.white,
       ),
     );
   }
@@ -258,12 +262,12 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+            color: const Color(0xFFF3E8FF), // Contenedor muy suave lila
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.chevron_left),
+                  icon: const Icon(Icons.chevron_left, color: Color(0xFF9333EA)),
                   onPressed: () {
                     setState(() {
                       _focusedDate = DateTime(_focusedDate.year, _focusedDate.month - 1, 1);
@@ -272,10 +276,10 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 Text(
                   "${months[_focusedDate.month - 1]} ${_focusedDate.year}",
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF7E22CE)),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.chevron_right),
+                  icon: const Icon(Icons.chevron_right, color: Color(0xFF9333EA)),
                   onPressed: () {
                     setState(() {
                       _focusedDate = DateTime(_focusedDate.year, _focusedDate.month + 1, 1);
@@ -295,8 +299,8 @@ class _MainScreenState extends State<MainScreen> {
                 Text('Mié', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
                 Text('Jue', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
                 Text('Vie', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
-                Text('Sáb', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue)),
-                Text('Dom', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+                Text('Sáb', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC4899))), // Sábado rosita
+                Text('Dom', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF43F5E))), // Domingo rojo tierno
               ],
             ),
           ),
@@ -340,22 +344,22 @@ class _MainScreenState extends State<MainScreen> {
               _selectedDate = date;
             });
           },
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           child: Container(
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: isSelected
-                  ? Theme.of(context).colorScheme.primary
+                  ? const Color(0xFFD946EF) // Fucsia/Rosa tierno seleccionado
                   : isHoliday
-                      ? Colors.red.withOpacity(0.15)
+                      ? const Color(0xFFFFE4E6) // Fondo rosita claro para festivos
                       : isToday
-                          ? Theme.of(context).colorScheme.primaryContainer
+                          ? const Color(0xFFF3E8FF)
                           : Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               border: isToday && !isSelected
-                  ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2)
+                  ? Border.all(color: const Color(0xFFC084FC), width: 2)
                   : isHoliday && !isSelected
-                      ? Border.all(color: Colors.red.shade300, width: 1)
+                      ? Border.all(color: const Color(0xFFFDA4AF), width: 1)
                       : null,
             ),
             child: Column(
@@ -368,8 +372,8 @@ class _MainScreenState extends State<MainScreen> {
                     color: isSelected
                         ? Colors.white
                         : isHoliday
-                            ? Colors.red.shade800
-                            : (date.weekday == 7 ? Colors.red : Colors.black87),
+                            ? const Color(0xFFBE123C)
+                            : (date.weekday == 7 ? const Color(0xFFF43F5E) : Colors.black87),
                   ),
                 ),
                 if (dayEvents.isNotEmpty)
@@ -417,7 +421,7 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               Text(
                 'Eventos del ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF7E22CE)),
               ),
               Text(
                 '${events.length} evento(s)',
@@ -433,10 +437,10 @@ class _MainScreenState extends State<MainScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.event_available, size: 40, color: Colors.grey),
+                        Icon(Icons.favorite_border, size: 40, color: Color(0xFFF472B6)),
                         SizedBox(height: 8),
                         Text(
-                          'No hay eventos programados para este día',
+                          'No hay eventos programados para este día 🌸',
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -450,13 +454,15 @@ class _MainScreenState extends State<MainScreen> {
                   itemBuilder: (context, index) {
                     final event = events[index];
                     return Card(
-                      color: event.isHoliday ? Colors.red.shade50 : null,
+                      color: event.isHoliday ? const Color(0xFFFFE4E6) : const Color(0xFFFAF5FF),
+                      elevation: 1,
                       margin: const EdgeInsets.only(bottom: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: event.color.withOpacity(0.2),
                           child: Icon(
-                            event.isHoliday ? Icons.star : Icons.bookmark,
+                            event.isHoliday ? Icons.favorite : Icons.star,
                             color: event.color,
                           ),
                         ),
@@ -464,14 +470,14 @@ class _MainScreenState extends State<MainScreen> {
                           event.title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: event.isHoliday ? Colors.red.shade900 : Colors.black,
+                            color: event.isHoliday ? const Color(0xFF9F1239) : const Color(0xFF6B21A8),
                           ),
                         ),
-                        subtitle: Text('${event.time} • ${event.description}'),
+                        subtitle: Text('${event.time} • ${event.description}', style: const TextStyle(color: Colors.black87)),
                         trailing: event.isHoliday
                             ? null
                             : IconButton(
-                                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                icon: const Icon(Icons.delete_outline, color: Color(0xFFF43F5E)),
                                 onPressed: () => _deleteEvent(_selectedDate, event),
                               ),
                       ),
@@ -492,7 +498,12 @@ class _MainScreenState extends State<MainScreen> {
     });
 
     if (allList.isEmpty) {
-      return const Center(child: Text('No hay ningún evento personal registrado.'));
+      return const Center(
+        child: Text(
+          'No hay ningún evento personal registrado. 🌷',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
     }
 
     return ListView.builder(
@@ -501,9 +512,11 @@ class _MainScreenState extends State<MainScreen> {
       itemBuilder: (context, index) {
         final item = allList[index];
         return Card(
+          color: const Color(0xFFFAF5FF),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
-            leading: Icon(Icons.event, color: item.value.color),
-            title: Text(item.value.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            leading: Icon(Icons.favorite, color: item.value.color),
+            title: Text(item.value.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF6B21A8))),
             subtitle: Text('Fecha: ${item.key} | Hora: ${item.value.time}\n${item.value.description}'),
           ),
         );
@@ -512,11 +525,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildCategoriesView() {
+    // Categorías con colores pasteles súper tiernos
     final categories = [
-      {'name': 'Trabajo', 'color': Colors.blue, 'icon': Icons.work},
-      {'name': 'Personal', 'color': Colors.green, 'icon': Icons.person},
-      {'name': 'Estudio', 'color': Colors.orange, 'icon': Icons.school},
-      {'name': 'Festivos', 'color': Colors.red, 'icon': Icons.star},
+      {'name': 'Trabajo', 'color': const Color(0xFF60A5FA), 'icon': Icons.work},       // Azul pastel
+      {'name': 'Personal', 'color': const Color(0xFF34D399), 'icon': Icons.person},     // Verde menta pastel
+      {'name': 'Estudio', 'color': const Color(0xFFFBBF24), 'icon': Icons.school},     // Amarillo pastel
+      {'name': 'Salud', 'color': const Color(0xFFF43F5E), 'icon': Icons.favorite},     // Rosa tierno
+      {'name': 'Festivos', 'color': const Color(0xFFC084FC), 'icon': Icons.star},      // Lila pastel
     ];
 
     return GridView.builder(
@@ -531,10 +546,12 @@ class _MainScreenState extends State<MainScreen> {
         final cat = categories[index];
         final color = cat['color'] as Color;
         return Card(
+          elevation: 2,
           color: color.withOpacity(0.15),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: InkWell(
             onTap: () {},
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -555,72 +572,124 @@ class _MainScreenState extends State<MainScreen> {
   void _showAddEventDialog(BuildContext context) {
     final titleController = TextEditingController();
     final descController = TextEditingController();
-    String time = '10:00 AM';
+    TimeOfDay selectedTime = TimeOfDay.now();
     String selectedCat = 'Personal';
-    Color selectedColor = Colors.green;
+    Color selectedColor = const Color(0xFF34D399);
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Nuevo Evento (${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year})'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Título del Evento', border: OutlineInputBorder()),
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: Text(
+                'Nuevo Evento ✨\n(${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year})',
+                style: const TextStyle(fontSize: 18, color: Color(0xFF7E22CE)),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: titleController,
+                      decoration: InputDecoration(
+                        labelText: 'Título del Evento',
+                        prefixIcon: const Icon(Icons.edit, color: Color(0xFFC084FC)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: descController,
+                      decoration: InputDecoration(
+                        labelText: 'Descripción',
+                        prefixIcon: const Icon(Icons.notes, color: Color(0xFFC084FC)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: selectedCat,
+                      items: ['Trabajo', 'Personal', 'Estudio', 'Salud']
+                          .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                          .toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          setStateDialog(() {
+                            selectedCat = val;
+                            if (val == 'Trabajo') selectedColor = const Color(0xFF60A5FA);
+                            if (val == 'Personal') selectedColor = const Color(0xFF34D399);
+                            if (val == 'Estudio') selectedColor = const Color(0xFFFBBF24);
+                            if (val == 'Salud') selectedColor = const Color(0xFFF43F5E);
+                          });
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Categoría',
+                        prefixIcon: const Icon(Icons.category, color: Color(0xFFC084FC)),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Selector de hora interactivo tierno
+                    OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        side: const BorderSide(color: Color(0xFFC084FC)),
+                      ),
+                      icon: const Icon(Icons.access_time, color: Color(0xFF9333EA)),
+                      label: Text(
+                        'Hora: ${selectedTime.format(context)}',
+                        style: const TextStyle(fontSize: 16, color: Color(0xFF7E22CE)),
+                      ),
+                      onPressed: () async {
+                        final TimeOfDay? timePicked = await showTimePicker(
+                          context: context,
+                          initialTime: selectedTime,
+                        );
+                        if (timePicked != null) {
+                          setStateDialog(() {
+                            selectedTime = timePicked;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: descController,
-                  decoration: const InputDecoration(labelText: 'Descripción', border: OutlineInputBorder()),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar', style: TextStyle(color: Colors.grey)),
                 ),
-                const SizedBox(height: 12),
-                DropdownButtonFormField<String>(
-                  value: selectedCat,
-                  items: ['Trabajo', 'Personal', 'Estudio', 'Salud']
-                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null) {
-                      selectedCat = val;
-                      if (val == 'Trabajo') selectedColor = Colors.blue;
-                      if (val == 'Personal') selectedColor = Colors.green;
-                      if (val == 'Estudio') selectedColor = Colors.orange;
-                      if (val == 'Salud') selectedColor = Colors.red;
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD946EF),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    if (titleController.text.isNotEmpty) {
+                      _addEvent(
+                        Event(
+                          title: titleController.text,
+                          description: descController.text,
+                          time: selectedTime.format(context),
+                          category: selectedCat,
+                          color: selectedColor,
+                        ),
+                        _selectedDate,
+                      );
+                      Navigator.pop(context);
                     }
                   },
-                  decoration: const InputDecoration(labelText: 'Categoría', border: OutlineInputBorder()),
+                  child: const Text('Guardar 💖'),
                 ),
               ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (titleController.text.isNotEmpty) {
-                  _addEvent(
-                    Event(
-                      title: titleController.text,
-                      description: descController.text,
-                      time: time,
-                      category: selectedCat,
-                      color: selectedColor,
-                    ),
-                    _selectedDate,
-                  );
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text('Guardar'),
-            ),
-          ],
+            );
+          },
         );
       },
     );
