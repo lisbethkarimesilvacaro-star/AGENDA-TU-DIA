@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/initialize.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-void main() {
+// === [CÓDIGO 1: Inicialización global arriba del todo] ===
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   runApp(const AgendaApp());
 }
 
@@ -15,11 +33,10 @@ class AgendaApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          // Cambiamos el color base a un tono lila/rosa tierno
-          seedColor: const Color(0xFFD946EF), // Fucsia/Rosa suave
-          primary: const Color(0xFFC084FC),    // Lila pastel principal
-          secondary: const Color(0xFFF472B6),  // Rosa pastel secundario
-          primaryContainer: const Color(0xFFF3E8FF), // Lila muy clarito para contenedores
+          seedColor: const Color(0xFFD946EF),
+          primary: const Color(0xFFC084FC),
+          secondary: const Color(0xFFF472B6),
+          primaryContainer: const Color(0xFFF3E8FF),
         ),
       ),
       home: const MainScreen(),
@@ -124,7 +141,7 @@ class _MainScreenState extends State<MainScreen> {
     return list;
   }
 
-  void _addEvent(Event event, DateTime date) {
+  void _addEvent(Event event, DateTime date, TimeOfDay time) {
     final key = _formatDateKey(date);
     setState(() {
       if (_events.containsKey(key)) {
@@ -133,6 +150,46 @@ class _MainScreenState extends State<MainScreen> {
         _events[key] = [event];
       }
     });
+
+    // === [LLAMADA AL CÓDIGO 3: Aquí se dispara la alarma al guardar] ===
+    _scheduleNotification(event, date, time);
+  }
+
+  // === [CÓDIGO 2: La función que programa sonido, vibración y hora exacta] ===
+  Future<void> _scheduleNotification(Event event, DateTime date, TimeOfDay time) async {
+    final scheduledDate = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    if (scheduledDate.isBefore(DateTime.now())) return;
+
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'agenda_tu_dia_channel',
+      'Recordatorios de Agenda',
+      channelDescription: 'Canal para alertas de citas y eventos con sonido y vibración',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+    );
+
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      event.hashCode,
+      '¡Cita cercana! 🌸: ${event.title}',
+      event.description.isNotEmpty ? event.description : 'Es hora de tu evento programado.',
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 
   void _deleteEvent(DateTime date, Event eventToDelete) {
@@ -172,7 +229,7 @@ class _MainScreenState extends State<MainScreen> {
             UserAccountsDrawerHeader(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFFC084FC), Color(0xFFF472B6)], // Degradado lila y rosa tierno
+                  colors: [Color(0xFFC084FC), Color(0xFFF472B6)],
                 ),
               ),
               accountName: const Text(
@@ -245,7 +302,7 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () => _showAddEventDialog(context),
         icon: const Icon(Icons.add),
         label: const Text('Nuevo Evento'),
-        backgroundColor: const Color(0xFFE879F9), // Botón flotante en rosa pastel encendido
+        backgroundColor: const Color(0xFFE879F9),
         foregroundColor: Colors.white,
       ),
     );
@@ -262,7 +319,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: const Color(0xFFF3E8FF), // Contenedor muy suave lila
+            color: const Color(0xFFF3E8FF),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -299,8 +356,8 @@ class _MainScreenState extends State<MainScreen> {
                 Text('Mié', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
                 Text('Jue', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
                 Text('Vie', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
-                Text('Sáb', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC4899))), // Sábado rosita
-                Text('Dom', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF43F5E))), // Domingo rojo tierno
+                Text('Sáb', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEC4899))),
+                Text('Dom', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF43F5E))),
               ],
             ),
           ),
@@ -349,9 +406,9 @@ class _MainScreenState extends State<MainScreen> {
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               color: isSelected
-                  ? const Color(0xFFD946EF) // Fucsia/Rosa tierno seleccionado
+                  ? const Color(0xFFD946EF)
                   : isHoliday
-                      ? const Color(0xFFFFE4E6) // Fondo rosita claro para festivos
+                      ? const Color(0xFFFFE4E6)
                       : isToday
                           ? const Color(0xFFF3E8FF)
                           : Colors.transparent,
@@ -525,13 +582,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildCategoriesView() {
-    // Categorías con colores pasteles súper tiernos
     final categories = [
-      {'name': 'Trabajo', 'color': const Color(0xFF60A5FA), 'icon': Icons.work},       // Azul pastel
-      {'name': 'Personal', 'color': const Color(0xFF34D399), 'icon': Icons.person},     // Verde menta pastel
-      {'name': 'Estudio', 'color': const Color(0xFFFBBF24), 'icon': Icons.school},     // Amarillo pastel
-      {'name': 'Salud', 'color': const Color(0xFFF43F5E), 'icon': Icons.favorite},     // Rosa tierno
-      {'name': 'Festivos', 'color': const Color(0xFFC084FC), 'icon': Icons.star},      // Lila pastel
+      {'name': 'Trabajo', 'color': const Color(0xFF60A5FA), 'icon': Icons.work},
+      {'name': 'Personal', 'color': const Color(0xFF34D399), 'icon': Icons.person},
+      {'name': 'Estudio', 'color': const Color(0xFFFBBF24), 'icon': Icons.school},
+      {'name': 'Salud', 'color': const Color(0xFFF43F5E), 'icon': Icons.favorite},
+      {'name': 'Festivos', 'color': const Color(0xFFC084FC), 'icon': Icons.star},
     ];
 
     return GridView.builder(
@@ -632,7 +688,6 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    // Selector de hora interactivo tierno
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 50),
@@ -681,6 +736,7 @@ class _MainScreenState extends State<MainScreen> {
                           color: selectedColor,
                         ),
                         _selectedDate,
+                        selectedTime,
                       );
                       Navigator.pop(context);
                     }
